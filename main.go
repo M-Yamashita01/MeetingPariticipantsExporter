@@ -19,7 +19,7 @@ const (
 	defaultTokenCachePath = "token_cache.json"
 )
 
-var defaultScopes = []string{"offline_access", "User.Read", "Calendars.Read", "Files.Read"}
+var defaultScopes = []string{"offline_access", "User.Read", "Calendars.Read", "Files.Read", "Group.Read.All", "Team.ReadBasic.All"}
 
 func dump(o interface{}) {
 	enc := jsonx.NewEncoder(os.Stdout)
@@ -47,11 +47,25 @@ func main() {
 	}
 	m.SaveFile(tokenCachePath)
 
+	// fmt.Printf(ts.Token().)
+
 	httpClient := oauth2.NewClient(ctx, ts)
 	graphClient := msgraph.NewClient(httpClient)
 	{
 		log.Printf("Get current logged in user information.")
 		req := graphClient.Me().Request()
+		log.Printf("Get %s", req.URL())
+		user, err := req.Get(ctx)
+		if err == nil {
+			dump(user)
+		} else {
+			log.Println(err)
+		}
+	}
+
+	{
+		log.Printf("Get joined team.")
+		req := graphClient.Me().JoinedTeams().Request()
 		log.Printf("Get %s", req.URL())
 		user, err := req.Get(ctx)
 		if err == nil {
