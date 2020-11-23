@@ -1,77 +1,31 @@
 package main
 
 import (
-	"context"
-	"flag"
 	"fmt"
-	"log"
-	"os"
-
-	"github.com/yaegashi/msgraph.go/jsonx"
-	msauth "github.com/yaegashi/msgraph.go/msauth"
-	msgraph "github.com/yaegashi/msgraph.go/v1.0"
-	"golang.org/x/oauth2"
+	"net/http"
+	"net/http/httputil"
 )
-
-const (
-	defaultTenantID       = "common"
-	defaultClientID       = "45c7f99c-0a94-42ff-a6d8-a8d657229e8c"
-	defaultTokenCachePath = "token_cache.json"
-)
-
-var defaultScopes = []string{"offline_access", "User.Read", "Calendars.Read", "Files.Read", "Group.Read.All", "Team.ReadBasic.All"}
-
-func dump(o interface{}) {
-	enc := jsonx.NewEncoder(os.Stdout)
-	enc.SetIndent("", "  ")
-	enc.Encode(o)
-}
 
 func main() {
-	// var string
-	// var filePath string
-	fmt.Println("Hello, world!")
-	var tenantID, clientID, tokenCachePath string
+	var accessToken string
+	var meetingUUID string
+	fmt.Println("Input access token")
+	fmt.Scan(&accessToken)
+	fmt.Println("Input meetingId")
+	fmt.Scan(&meetingUUID)
 
-	flag.StringVar(&tenantID, "tenant-id", defaultTenantID, "TenantID")
-	flag.StringVar(&clientID, "client-id", defaultClientID, "ClientID")
-	flag.StringVar(&tokenCachePath, "token-cache-path", defaultTokenCachePath, "TokenCachePath")
-	flag.Parse()
+	meetingParticipantsUrl := "https://api.zoom.us/v2/past_meetings/"
+	url := meetingParticipantsUrl + meetingUUID + "/participants"
+	req, _ := http.NewRequest("GET", url, nil)
+	bearerAccessToken := "Bearer " + accessToken
+	req.Header.Set("Authorization", bearerAccessToken)
 
-	ctx := context.Background()
-	m := msauth.NewManager()
-	m.LoadFile(tokenCachePath)
-	ts, err := m.DeviceAuthorizationGrant(ctx, tenantID, clientID, defaultScopes, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	m.SaveFile(tokenCachePath)
+	dump, _ := httputil.DumpRequestOut(req, true)
+	fmt.Printf("%s", dump)
 
-	// fmt.Printf(ts.Token().)
+	client := new(http.Client)
+	resp, _ := client.Do(req)
 
-	httpClient := oauth2.NewClient(ctx, ts)
-	graphClient := msgraph.NewClient(httpClient)
-	{
-		log.Printf("Get current logged in user information.")
-		req := graphClient.Me().Request()
-		log.Printf("Get %s", req.URL())
-		user, err := req.Get(ctx)
-		if err == nil {
-			dump(user)
-		} else {
-			log.Println(err)
-		}
-	}
-
-	{
-		log.Printf("Get joined team.")
-		req := graphClient.Me().JoinedTeams().Request()
-		log.Printf("Get %s", req.URL())
-		user, err := req.Get(ctx)
-		if err == nil {
-			dump(user)
-		} else {
-			log.Println(err)
-		}
-	}
+	dumpResp, _ := httputil.DumpResponse(resp, true)
+	fmt.Printf("%s", dumpResp)
 }
