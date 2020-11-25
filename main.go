@@ -1,7 +1,9 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"net/http/httputil"
@@ -14,6 +16,20 @@ import (
 type Env struct {
 	SecretKey string `required:"true"`
 	ApiKey    string `required:"true"`
+}
+
+type MeetingParticipantsResponseBody struct {
+	PageCount     int                        `json: page_count`
+	PageSize      int                        `json: page_size`
+	TotalRecord   int                        `json: total_records `
+	NextPageToken string                     `json: next_page_token`
+	Participants  []ParticipantsResponseBody `json: participants`
+}
+
+type ParticipantsResponseBody struct {
+	Id        string `json: id`
+	Name      string `json: name`
+	UserEmail string `json: user_email`
 }
 
 func main() {
@@ -58,5 +74,25 @@ func main() {
 	resp, _ := client.Do(req)
 
 	dumpResp, _ := httputil.DumpResponse(resp, true)
-	fmt.Printf("%s", dumpResp)
+	fmt.Printf("%s\n", dumpResp)
+
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	fmt.Println("Response body: ", string(body))
+
+	//Unmarshall json
+	var meetingParticipantsResponseBody MeetingParticipantsResponseBody
+	if err := json.Unmarshal(body, &meetingParticipantsResponseBody); err != nil {
+		log.Fatal(err)
+		// ("ERROR Environment is not set: %s", err)
+		return
+	}
+
+	fmt.Printf("pageCount: %v, pageSize: %v", meetingParticipantsResponseBody.PageCount, meetingParticipantsResponseBody.PageSize)
+
 }
