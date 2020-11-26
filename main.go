@@ -19,17 +19,17 @@ type Env struct {
 }
 
 type MeetingParticipantsResponseBody struct {
-	PageCount     int                        `json: page_count`
-	PageSize      int                        `json: page_size`
-	TotalRecord   int                        `json: total_records `
-	NextPageToken string                     `json: next_page_token`
-	Participants  []ParticipantsResponseBody `json: participants`
+	Pagecount     int                        `json:"page_count"`
+	PageSize      int                        `json:"page_size"`
+	TotalRecord   int                        `json:"total_records"`
+	NextPageToken string                     `json:"next_page_token"`
+	Participants  []ParticipantsResponseBody `json:"participants"`
 }
 
 type ParticipantsResponseBody struct {
-	Id        string `json: id`
-	Name      string `json: name`
-	UserEmail string `json: user_email`
+	Id        string `json:"id"`
+	Name      string `json:"name"`
+	UserEmail string `json:"user_email"`
 }
 
 func main() {
@@ -83,16 +83,16 @@ func main() {
 		return
 	}
 
-	fmt.Println("Response body: ", string(body))
-
 	//Unmarshall json
 	var meetingParticipantsResponseBody MeetingParticipantsResponseBody
 	if err := json.Unmarshal(body, &meetingParticipantsResponseBody); err != nil {
 		log.Fatal(err)
-		// ("ERROR Environment is not set: %s", err)
 		return
 	}
 
-	fmt.Printf("pageCount: %v, pageSize: %v", meetingParticipantsResponseBody.PageCount, meetingParticipantsResponseBody.PageSize)
+	fmt.Println("Participant")
+	for _, participant := range meetingParticipantsResponseBody.Participants {
+		fmt.Printf("%s\n", participant.Name)
+	}
 
 }
