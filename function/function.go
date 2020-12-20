@@ -1,4 +1,4 @@
-package main
+package function
 
 import (
 	"crypto/hmac"
@@ -54,7 +54,7 @@ func ExportParticipants(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to process request", http.StatusBadRequest)
 		return
 	}
-	slackSigningBaseString := "v0:" + slackTimestamp + ":" + string(b)
+	slackSigningBaseString := "v0:" + slackTimeStamp + ":" + string(b)
 	slackSignature := r.Header.Get("X-Slack-Signature")
 
 	if !matchSignature(slackSignature, signingSecret, slackSigningBaseString) {
