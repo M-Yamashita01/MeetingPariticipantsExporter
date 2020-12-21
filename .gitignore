@@ -1,6 +1,7 @@
 token_cache.json
-.vscode
+
 go.sum
 go.mod
 .swp
 main
+.vscode
