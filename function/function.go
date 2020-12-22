@@ -107,17 +107,19 @@ func ExportParticipants(w http.ResponseWriter, r *http.Request) {
 	req.Header.Set("Authorization", bearerAccessToken)
 
 	dump, _ := httputil.DumpRequestOut(req, true)
-	fmt.Printf("%s", dump)
+	fmt.Printf("DumpRequest: %s", dump)
 
 	client := new(http.Client)
 	resp, _ := client.Do(req)
 
 	dumpResp, _ := httputil.DumpResponse(resp, true)
-	fmt.Printf("%s\n", dumpResp)
+	fmt.Printf("DumpResponse: %s\n", dumpResp)
 
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
+	fmt.Printf("Response body: %s", body)
 	if err != nil {
+		fmt.Printf("Error ocurred while executing ReadAll. %s", err)
 		log.Fatal(err)
 		return
 	}
@@ -125,6 +127,7 @@ func ExportParticipants(w http.ResponseWriter, r *http.Request) {
 	//Unmarshall json
 	var meetingParticipantsResponseBody MeetingParticipantsResponseBody
 	if err := json.Unmarshal(body, &meetingParticipantsResponseBody); err != nil {
+		fmt.Printf("Error ocurred while unmarshal body. %s", err)
 		log.Fatal(err)
 		return
 	}

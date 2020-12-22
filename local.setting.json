@@ -1,0 +1,12 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "FUNCTIONS_WORKER_RUNTIME": "Custom",
+    "AzureWebJobsStorage": "",
+    "AzureWebJobsDashboard": "",
+    "Environment": "Test"
+  },
+  "ConnectionStrings": {
+    "EventHub": "Endpoint=SomeConnection"
+  }
+}
