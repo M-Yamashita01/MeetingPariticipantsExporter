@@ -4,7 +4,7 @@
     "FUNCTIONS_WORKER_RUNTIME": "Custom",
     "AzureWebJobsStorage": "",
     "AzureWebJobsDashboard": "",
-    "Environment": "Test"
+    "Environment": "Test",
   },
   "ConnectionStrings": {
     "EventHub": "Endpoint=SomeConnection"
