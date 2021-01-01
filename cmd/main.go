@@ -12,7 +12,7 @@ import (
 func main() {
 	port, exists := os.LookupEnv("FUNCTIONS_CUSTOMHANDLER_PORT")
 	if !exists {
-		port = "8080"
+		port = "7071"
 	}
 	http.HandleFunc("/api/zoom", function.ExportParticipants)
 	fmt.Println("Go server listening on port", port)

@@ -5,5 +5,5 @@ go.mod
 .swp
 main
 .vscode
-# app by build
+# built app
 go_main

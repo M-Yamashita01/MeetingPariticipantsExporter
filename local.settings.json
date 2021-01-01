@@ -4,6 +4,8 @@
     "FUNCTIONS_WORKER_RUNTIME": "custom",
     "AzureWebJobsStorage": "UseDevelopmentStorage=true;",
     "SLACK_SIGNING_SECRET": "This is a secret",
-    "FUNCTIONS_CUSTOMHANDLER_PORT": 8080
+    "FUNCTIONS_CUSTOMHANDLER_PORT": 8080,
+    "SECRETKEY": "This is a secret",
+    "APIKEY": "This is a secret"
   }
 }
