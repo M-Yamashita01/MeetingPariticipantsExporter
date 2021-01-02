@@ -14,7 +14,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/cristalhq/jwt/v3"
+	"github.com/cristalhq/jwt"
 	"github.com/kelseyhightower/envconfig"
 )
 
@@ -88,7 +88,8 @@ func ExportParticipants(w http.ResponseWriter, r *http.Request) {
 
 	now := time.Now()
 	after := now.Add(time.Minute)
-	claims := jwt.StandardClaims{
+	claims := jwt.RegisteredClaims{
+		// claims := jwt.StandardClaims{
 		Issuer:    goenv.ApiKey,
 		ExpiresAt: jwt.NewNumericDate(after),
 	}
