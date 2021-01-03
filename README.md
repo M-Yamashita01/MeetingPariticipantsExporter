@@ -1,1 +1,4 @@
 # MeetingPariticipantsExporter
+
+過去のZoom会議参加者を、SlackからAzure Functionsを通じて取得できるツールです。
+現時点で、会議を開いた人、かつZoom有料プランを使用している人のみ、参加者を取得可能です。
